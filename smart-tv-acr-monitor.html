@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuando el Smart TV se convierte en monitor: Riesgos de ACR | StringManolo</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #1a1a1a;
+            --code-bg: #f8f9fa;
+            --border: #bdc3c7;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px 10px 0 0;
+            margin-bottom: 0;
+        }
+        
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 1rem;
+        }
+        
+        .author-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid var(--secondary);
+        }
+        
+        .article-meta {
+            background: var(--secondary);
+            color: white;
+            padding: 1rem 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .content {
+            background: white;
+            padding: 2rem;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin: 2rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary);
+        }
+        
+        h3 {
+            color: var(--secondary);
+            margin: 1.5rem 0 0.5rem 0;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .danger {
+            background: #f8d7da;
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .technical {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+        }
+        
+        code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+        }
+        
+        ul, ol {
+            margin: 1rem 0 1rem 2rem;
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .mitigation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .mitigation-card {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .references {
+            background: var(--code-bg);
+            padding: 1.5rem;
+            border-radius: 5px;
+            margin-top: 2rem;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            color: #666;
+            border-top: 1px solid var(--border);
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 1rem;
+            }
+            
+            .mitigation-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Cuando el Smart TV se convierte en monitor: Riesgos de ACR en entornos sensibles</h1>
+        <div class="author-info">
+            <img src="https://github.com/stringmanolo.png" alt="StringManolo" class="author-avatar">
+            <div>
+                <strong>StringManolo</strong><br>
+                Cybersecurity Researcher<br>
+                <small>github.com/StringManolo</small>
+            </div>
+        </div>
+    </header>
+    
+    <div class="article-meta">
+        <strong>Publicado:</strong> Noviembre 2025 | <strong>Tiempo de lectura:</strong> 3 min | 
+        <strong>Tags:</strong> #SmartTV #ACR #Privacidad #Ciberseguridad
+    </div>
+    
+    <div class="content">
+        <div class="warning">
+            <strong>⚠️ Atención:</strong> Si usas un Smart TV como monitor de tu PC u otro dispositivo, este artículo te interesa. Tu televisor podría estar espiando todo lo que muestras.
+        </div>
+
+        <h2>Introducción: El caballo de Troya en tu salón</h2>
+        
+        <p>Trasteando con dispositivos IoT y analizando sus comunicaciones. Hay una brecha enorme entre lo que la gente cree que hace su Smart TV y lo que realmente hace. Cuando conectas tu portátil, smartphone, consola o PC a un televisor "inteligente", la mayoría asume que se comporta como un monitor tradicional. <strong>Error.</strong></p>
+        
+        <p>Bajo la superficie, muchos de estos dispositivos ejecutan motores de ACR (Automatic Content Recognition) diseñados para analizar <strong>lo que se muestra en pantalla</strong> y vincularlo con publicidad, analíticas o perfiles de usuario.</p>
+        
+        <p>Si usas un Smart TV como monitor principal, estás confiándole <strong>todo</strong> lo que muestras: credenciales, documentos internos, llamadas de Teams, dashboards financieros, código fuente... mientras el mismo motor de captura diseñado para "programas de TV" puede seguir activo. Este artículo busca mapear ese riesgo con suficiente detalle técnico como para que tomes decisiones informadas.</p>
+
+        <h2>¿Cómo funciona realmente ACR?</h2>
+        
+        <h3>Métodos técnicos de implementación</h3>
+        
+        <p>Automatic Content Recognition (ACR) es una tecnología embebida en Smart TVs que identifica el contenido mostrado capturando muestras (frames de vídeo o audio) y comparándolas contra una base de datos de referencia.</p>
+        
+        <div class="technical">
+            <strong>Dos métodos principales:</strong><br><br>
+            
+            <strong>🔹 Watermarking (marcas de agua):</strong><br>
+            - Contenido lleva marcador embebido imperceptible<br>
+            - El TV detecta y reporta el watermark<br>
+            - Menos común en contenido HDMI/externo<br><br>
+            
+            <strong>🔹 Fingerprinting (huella digital):</strong><br>
+            - TV captura frames/audio y genera hash descriptivo<br>
+            - Usa algoritmos como SIFT, ORB o redes neuronales<br>
+            - Envía hash a servidor para identificación<br>
+            - <strong>Método más peligroso en modo monitor</strong>
+        </div>
+
+        <h3>Flujo técnico detallado</h3>
+        
+        <p>Desde el punto de vista del dispositivo:</p>
+        
+        <ol>
+            <li><strong>Captura:</strong> El firmware del TV muestrea frames de vídeo (incluso de HDMI o Wi-Fi) y/o fragmentos de audio</li>
+            <li><strong>Procesamiento local:</strong> Aplica algoritmos de extracción de características para generar "huella"</li>
+            <li><strong>Transmisión:</strong> La huella + metadatos (device ID, timestamp) se envía vía HTTPS</li>
+            <li><strong>Identificación:</strong> Servidor compara con su BD y devuelve match (si existe)</li>
+            <li><strong>Explotación:</strong> Datos se usan para analytics, recomendaciones, publicidad o delitos electrónicos</li>
+        </ol>
+
+        <div class="danger">
+            <strong>Evidencia empírica:</strong> Investigaciones recientes (Anselmi et al. 2024) confirman que el tracking por ACR <strong>persiste en entradas HDMI</strong>. En pruebas con TVs Samsung y LG, se detectó tráfico de fingerprinting incluso mostrando contenido de ordenador.
+        </div>
+
+        <h2>Modelo de amenazas: Tu TV como elemento de espionaje</h2>
+        
+        <h3>Escenarios comunes</h3>
+        
+        <ul>
+            <li><strong>Navegación:</strong> Relleno de formularios (credenciales y data personal), consulta de correos electrónicos </li>
+            <li><strong>R&D/Desarrollo:</strong> Prototipos, diagramas de arquitectura, código fuente</li>
+            <li><strong>Videoconferencias:</strong> Reuniones internas, pizarras colaborativas</li>
+            <li><strong>Dashboards:</strong> Métricas financieras, datos de clientes, KPI internos</li>
+            <li><strong>Remote Desktop:</strong> Sesiones RDP/VNC con sistemas críticos</li>
+        </ul>
+
+        <h3>Cadena de ataque completa</h3>
+        
+        <div class="technical">
+            <strong>Attack Chain ACR + Lateral Movement:</strong><br><br>
+            
+            1. <strong>Reconocimiento:</strong> Compromiso inicial del TV (ej: CVE-2021-1479 en WebOS), de las comunicaciones o del servidor de destino<br>
+            2. <strong>Captura:</strong> Análisis de tráfico ACR para entender patrones de trabajo<br>
+            3. <strong>Explotación:</strong> Uso de datos para spear-phishing personalizado o login con credenciales extraidas<br>
+            4. <strong>Movimiento lateral:</strong> Pivotaje hacia PC u otros dispositivos de red mediante shared network<br>
+            5. <strong>Exfiltración:</strong> Datos sensibles capturados via ACR + otros sistemas
+        </div>
+
+        <h2> Mitigaciones prácticas</h2>
+        
+        <div class="mitigation-grid">
+            <div class="mitigation-card">
+                <h3>Nivel Dispositivo</h3>
+                <ul>
+                    <li>Deshabilitar ACR en menús de privacidad</li>
+                    <li>Reset de fábrica tras updates de firmware y reconfiguración</li>
+                    <li>Cinta aislante en micrófono/cámara</li>
+                    <li>Desconectar red cuando sea posible</li>
+                </ul>
+            </div>
+            
+            <div class="mitigation-card">
+                <h3>Nivel Red</h3>
+                <ul>
+                    <li>VLAN aislada para TVs</li>
+                    <li>Firewall bloqueando tráfico saliente</li>
+                    <li>DNS filtering (Pi-hole/pfBlockerNG)</li>
+                    <li>Monitorización con Wireshark</li>
+                </ul>
+            </div>
+            
+            <div class="mitigation-card">
+                <h3>Nivel Organizacional</h3>
+                <ul>
+                    <li>Política explícita prohibiendo Smart TVs</li>
+                    <li>Inventory de displays como endpoints</li>
+                    <li>Awareness training específico</li>
+                    <li>Preferir displays "dumb"</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>Comandos prácticos de bloqueo</h3>
+        
+        <div class="technical">
+            <strong>Dominios a bloquear en Pi-hole/pfSense:</strong><br><br>
+            
+            # Samsung<br>
+            samsungcloudsolution.com<br>
+            acr0.samsungcloudsolution.com<br><br>
+            
+            # LG<br>
+            lgad.cjpowercast.com<br>
+            us.lgtvsdp.com<br><br>
+            
+            # Samba TV (común en Sony, TCL)<br>
+            sambavideo.com<br>
+            config.samsungads.com
+        </div>
+
+        <h2>Conclusión</h2>
+        
+        <p>El mensaje es claro: si conectas tu equipo a un Smart TV, no lo trates como un monitor. Trátalo como un dispositivo de red que potencialmente está capturando todo lo que muestras y enviándolo a terceros.</p>
+        
+        <p>Deshabilitando ACR, segmentando la red, estableciendo firewall, manteniendo el firmware actualizado y tratando el TV como parte de tu superficie de ataque, reduces significativamente el riesgo.</p>
+        
+        <div class="references">
+            <h3>Referencias Técnicas</h3>
+            <ul>
+              <li><a href="https://www.researchgate.net/publication/383917613_Watching_TV_with_the_Second-Party_A_First_Look_at_Automatic_Content_Recognition_Tracking_in_Smart_TVs">Anselmi et al. "Watching TV with the Second-Party: A First Look at Automatic Content Recognition Tracking in Smart TVs" - IMC 2024</a></li>
+              <li><a href="https://www.samba.tv/sitemap.xml">Documentación técnica y artículos de Samba TV</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 StringManolo - Cybersecurity Researcher</p>
+        <p><a href="https://github.com/stringmanolo">GitHub</a> | <a href="papers/index.html">Todos los papers</a></p>
+    </footer>
+</body>
+</html>
