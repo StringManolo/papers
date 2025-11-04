@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vulnerabilidad de Truncamiento en Bcrypt: Análisis y Mitigaciones | StringManolo</title>
+    <meta name="description" content="Análisis de la vulnerabilidad de truncamiento silencioso en bcrypt que afecta sistemas de autenticación. Soluciones prácticas y recomendaciones.">
+    <meta name="keywords" content="bcrypt, vulnerabilidad, truncamiento, 72 bytes, seguridad, autenticación">
+    <meta name="author" content="StringManolo">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Vulnerabilidad de Truncamiento en Bcrypt: Análisis y Mitigaciones">
+    <meta property="og:description" content="Análisis de la vulnerabilidad de truncamiento silencioso en bcrypt que afecta sistemas de autenticación.">
+    <meta property="og:image" content="https://github.com/stringmanolo.png">
+    <meta property="og:type" content="article">
+    
+    <!-- Estilos -->
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #1a1a1a;
+            --code-bg: #f8f9fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 1rem;
+        }
+
+        .author-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid var(--secondary);
+        }
+
+        .article-meta {
+            background: var(--secondary);
+            color: white;
+            padding: 1rem 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .content {
+            background: white;
+            padding: 2rem;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin: 2rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary);
+        }
+        
+        h3 {
+            color: var(--secondary);
+            margin: 1.5rem 0 0.5rem 0;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .technical {
+            background: var(--code-bg);
+            border: 1px solid #ddd;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+        }
+
+        code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Consolas', monospace;
+        }
+        
+        ul {
+            margin: 1rem 0 1rem 2rem;
+        }
+        
+        .mitigation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .mitigation-card {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .vulnerabilities {
+            background: var(--code-bg);
+            padding: 1.5rem;
+            border-radius: 5px;
+            margin-top: 2rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            color: #666;
+            border-top: 1px solid #ddd;
+        }
+
+        .demo-link {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            .mitigation-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Vulnerabilidad de Truncamiento en Bcrypt: Análisis y Mitigaciones</h1>
+        <div class="author-info">
+            <img src="https://github.com/stringmanolo.png" alt="StringManolo" class="author-avatar">
+            <div>
+                <strong>StringManolo</strong><br>
+                Cybersecurity Researcher<br>
+                <small>github.com/StringManolo</small>
+            </div>
+        </div>
+    </header>
+
+    <div class="article-meta">
+        <strong>Publicado:</strong> 4 de Noviembre 2025 | <strong>Tiempo de lectura:</strong> 5 min |
+        <strong>Tags:</strong> #bcrypt #Vulnerabilidad #Truncamiento #Ciberseguridad
+    </div>
+
+    <div class="content">
+        <div class="warning">
+            <strong>⚠️ ADVERTENCIA:</strong> Sistemas que usan bcrypt sin validar longitud de contraseña pueden ser vulnerables a bypass de autenticación.
+        </div>
+
+        <h2>Introducción</h2>
+        <p>Bcrypt es ampliamente usado para el almacenamiento seguro de contraseñas, pero su limitación de 72 bytes puede ser explotada si no se valida correctamente la longitud de entrada.</p>
+
+        <h2>Problema Técnico</h2>
+        
+        <h3>Truncamiento Silencioso</h3>
+        <p>Bcrypt procesa solo los primeros 72 bytes de la contraseña, ignorando silenciosamente cualquier contenido adicional.</p>
+
+        <div class="technical">
+            // Ejemplo de comportamiento<br>
+            bcrypt.hash("a".repeat(72)) == bcrypt.hash("a".repeat(72) + "cualquier_cosa")
+        </div>
+
+        <h3>Bytes vs Caracteres</h3>
+        <p>La confusión surge al diferenciar bytes de caracteres:</p>
+        <ul>
+            <li>Carácter ASCII: 1 byte</li>
+            <li>Carácter Unicode: 2-4 bytes</li>
+            <li>Máximo seguro: 18 caracteres (18 × 4 = 72 bytes)</li>
+        </ul>
+
+        <h2>Impacto en Seguridad</h2>
+        
+        <h3>Vectores de Ataque</h3>
+        <ul>
+            <li>Bypass de autenticación con prefijos comunes</li>
+            <li>Colisiones de hash</li>
+            <li>Reducción de entropía efectiva</li>
+        </ul>
+
+        <h3>Demostración Práctica</h3>
+        <p>CTF educativo disponible: <a href="https://stringmanolo.github.io/share/pocs/bcrypt/login.html" class="demo-link">🔗 Demo Interactivo</a></p>
+
+        <div class="technical">
+            testAdminPassword("a".repeat(72)); // → Válida<br>
+            testAdminPassword("a".repeat(72) + "ADMIN"); // → Válida
+        </div>
+
+        <h3>Ejemplo de interpretación de bytes</h3>
+        <p>Ingresa en el CTF en una nueva pestaña y registra un nuevo usuario llamado Manolo.</p>
+        <p>Utiliza como contraseña para el usuario MANOLO 36 letras 'ñ' seguidas de cualquier texto, puedes copiar y pegar: <span style="font-size: 0.6rem;">ññññññññññññññññññññññññññññññññññññMANOLO123</span></p>
+
+        <p>Registra otro usuario llamado PACO</br>
+            Utiliza como contraseña para el usuario PACO 36 letras 'ñ' seguidas de cualquier texto, puedes copiar y pegar: <span style="font-size: 0.6rem">ññññññññññññññññññññññññññññññññññññPACO456</span></p>
+
+        <p>Las contraseña son distinas, pero puedes ingresar en la cuenta de cualquiera de los 2 usuarios usando la contraseña <span style="font-size: 0.6rem">ññññññññññññññññññññññññññññññññññññABCDEFG</span></p>
+
+      <p>Esto sucede porque el carcater 'ñ' ocupa 2 bytes, ya que es un carcater especial. Y Bcrypt trunca tras los 72 primeros bytes (36 ñ de 2 bytes == 72 bytes).</p>
+
+        <p>Emojis y otros caracteres especiales (como letras en otros idiomas) pueden utilizar hasta un máximo de 4 bytes por caracter.<p>
+
+
+        <h2>Mitigaciones</h2>
+
+        <div class="mitigation-grid">
+            <div class="mitigation-card">
+                <h3>Validación de Entrada</h3>
+                <ul>
+                    <li>Limitar a 18 caracteres máximo</li>
+                    <li>Utilizar otro algitmo de hashing</li>
+                </ul>
+            </div>
+
+            <div class="mitigation-card">
+                <h3>Implementación Segura</h3>
+                <div class="technical" style="font-size: 0.8rem;">
+                  const validatePassword = (pwd) => {<br>
+                    &nbsp;&nbsp;if (pwd.length > 18) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;throw new Error("Máximo 18 caracteres");<br>
+                    &nbsp;&nbsp;}<br>
+                    &nbsp;&nbsp;return true;<br>
+                  }
+                </div>
+            </div>
+
+            <div class="mitigation-card">
+                <h3>Alternativas</h3>
+                <ul>
+                    <li>Argon2id (recomendado)</li>
+                    <li>PBKDF2</li>
+                    <li>Scrypt</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>Conclusión</h2>
+        <p>Bcrypt sigue siendo seguro cuando se implementa correctamente. La clave está en validar la longitud de contraseñas (18 caracteres máximo) o migrar a algoritmos modernos como Argon2id.</p>
+
+        <div class="vulnerabilities">
+            <h3>Vulnerabilidades Relacionadas</h3>
+            <ul>
+                <li><a href="https://www.cve.news/cve-2025-22228/">CVE-2025-22228 - BCryptPasswordEncoder.matches() Vulnerability</a></li>
+                <li><a href="https://portswigger.net/daily-swig/bcrypt-hashing-library-bug-leaves-node-js-applications-open-to-brute-force-attacks">Bcrypt hashing library bug leaves Node.js applications open to brute-force attacks</a></li>
+                <li><a href="https://tnsafety.com/okta-bcrypt-vulnerability-exposes-critical-api-design-flaws">Okta Bcrypt Vulnerability Exposes Critical API Design Flaws</a></li>
+                <li><a href="https://www.drupal.org/project/drupal/issues/3536662">Properly handle that PHP bcrypt passwords are truncated to 72 bytes</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 StringManolo - Cybersecurity Researcher</p>
+        <p><a href="https://github.com/stringmanolo">GitHub</a> | <a href="https://stringmanolo.github.io/papers">Todos los papers</a></p>
+    </footer>
+</body>
+</html>
